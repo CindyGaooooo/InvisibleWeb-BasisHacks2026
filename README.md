@@ -46,13 +46,3 @@ It directly answers the theme: *What are people missing?* – Most users never k
 
 **Hosting:** Works on GitHub Pages by simply uploading the file.
 
----
-
-## 🎥 Demo Video
-
-See `video_script.txt` (1m 45s) for a complete walkthrough.  
-[Link to video – upload to YouTube or Google Drive, unlisted]
-
----
-
-## 📁 Repository Structure
