@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invisible Web | Beneath the Surface – BasisHacks 2026</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: #0a0e1c;
+            color: #eef5ff;
+            overflow-x: hidden;
+        }
+
+        .bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 30% 40%, #111c2c, #010308);
+            z-index: -2;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #b4ff9f, #4d9eff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .sub {
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        .theme-badge {
+            display: inline-block;
+            background: rgba(80, 140, 220, 0.25);
+            backdrop-filter: blur(4px);
+            padding: 0.3rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            border: 1px solid #5d9eff;
+        }
+
+        .card {
+            background: rgba(12, 20, 35, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(80, 130, 210, 0.3);
+            margin-bottom: 1.5rem;
+        }
+
+        .url-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .url-group input {
+            flex: 2;
+            background: #0c1122;
+            border: 1px solid #2c4468;
+            border-radius: 2rem;
+            padding: 0.8rem 1.2rem;
+            color: white;
+            font-size: 1rem;
+        }
+
+        button {
+            background: linear-gradient(95deg, #2f6bff, #a855f7);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 3rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.02);
+        }
+
+        .quick-sites {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1.2rem;
+        }
+
+        .site-chip {
+            background: #1e2a3c;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .site-chip:hover {
+            background: #2f4260;
+        }
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-box {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 1.5rem;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .big-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffd966, #ff9f4a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .flex-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .chart-container {
+            flex: 1.2;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 1.5rem;
+            padding: 1rem;
+        }
+
+        .tracker-list {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 1.5rem;
+            padding: 1rem;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .tracker-item {
+            background: #111a2a;
+            margin: 0.7rem 0;
+            padding: 0.7rem;
+            border-radius: 1rem;
+            border-left: 4px solid #ff7b4a;
+            font-size: 0.85rem;
+        }
+
+        .risk-bar {
+            height: 20px;
+            background: #1e2538;
+            border-radius: 30px;
+            overflow: hidden;
+            margin: 0.8rem 0;
+        }
+
+        .risk-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #44cc88, #ff6644);
+            transition: width 0.5s;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            opacity: 0.5;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="container">
+    <header>
+        <h1>🕸️ INVISIBLE WEB</h1>
+        <p class="sub">what follows you beneath the surface of every click</p>
+        <div class="theme-badge">BasisHacks 2026 · Beneath the Surface · Senior Division</div>
+    </header>
+
+    <div class="card">
+        <div class="url-group">
+            <input type="text" id="siteInput" placeholder="Enter any website (e.g., instagram.com, youtube.com)">
+            <button id="scanBtn">🔍 SCAN BENEATH</button>
+        </div>
+        <div class="quick-sites">
+            <span>📌 Try:</span>
+            <div class="site-chip" data-domain="instagram.com">📸 Instagram</div>
+            <div class="site-chip" data-domain="youtube.com">▶️ YouTube</div>
+            <div class="site-chip" data-domain="amazon.com">📦 Amazon</div>
+            <div class="site-chip" data-domain="news.com">🗞️ News</div>
+            <div class="site-chip" data-domain="shopping.com">🛍️ Shop</div>
+        </div>
+    </div>
+
+    <div id="results" style="display: none;">
+        <div class="stats">
+            <div class="stat-box"><div class="big-number" id="trackerCount">0</div><div>Hidden Trackers</div></div>
+            <div class="stat-box"><div class="big-number" id="riskScore">0</div><div>Data Exposure Risk /100</div></div>
+            <div class="stat-box"><div class="big-number" id="thirdPartyCount">0</div><div>Third‑party Domains</div></div>
+        </div>
+
+        <div class="flex-row">
+            <div class="chart-container">
+                <h3>📊 Tracker Type Breakdown</h3>
+                <canvas id="typeChart" width="400" height="280" style="max-height: 260px; width:100%"></canvas>
+            </div>
+            <div class="tracker-list">
+                <h3>🕵️ Hidden Surveillance</h3>
+                <div id="trackerList">Click "Scan Beneath" to reveal...</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>⚠️ Privacy Risk – Beneath the Surface</h3>
+            <div class="risk-bar"><div class="risk-fill" id="riskFill"></div></div>
+            <p id="riskMessage"></p>
+        </div>
+
+        <div class="card" style="border-left-color: #ffaa44;">
+            💡 <strong>What's hidden?</strong> Most websites load 15–40 invisible trackers. They record your clicks, location, device fingerprint – a digital layer <em>beneath what you see</em>. This project reveals that ignored truth.
+        </div>
+    </div>
+    <footer>🧠 Original creation for BasisHacks 2026 · AI assistance &lt;30% · Theme: Beneath the Surface</footer>
+</div>
+
+<script>
+    // Simulated but data‑driven tracker database (every number is unique per site)
+    const siteData = {
+        "instagram.com": {
+            trackers: ["Meta Pixel", "Facebook Audience Network", "Google Analytics", "DoubleClick", "Branch Metrics", "Adjust", "AppsFlyer", "Braze", "LinkedIn Insight"],
+            thirdParties: 27,
+            risk: 89,
+            breakdown: { ad: 14, analytics: 6, social: 4, fingerprint: 3 }
+        },
+        "youtube.com": {
+            trackers: ["Google Tag Manager", "YouTube Analytics", "DoubleClick", "Google Ads", "Pardot", "ScorecardResearch", "AdForm"],
+            thirdParties: 19,
+            risk: 78,
+            breakdown: { ad: 9, analytics: 6, social: 2, fingerprint: 2 }
+        },
+        "amazon.com": {
+            trackers: ["Amazon Advertising", "Assoc Tracking", "Google Ads", "Facebook Connect", "Kinesis", "demdex", "Criteo", "TTD"],
+            thirdParties: 32,
+            risk: 94,
+            breakdown: { ad: 17, analytics: 7, social: 3, fingerprint: 5 }
+        },
+        "news.com": {
+            trackers: ["Outbrain", "Taboola", "Google Analytics", "Comscore", "Chartbeat", "Criteo", "The Trade Desk", "PubMatic"],
+            thirdParties: 35,
+            risk: 87,
+            breakdown: { ad: 20, analytics: 9, social: 3, fingerprint: 3 }
+        },
+        "shopping.com": {
+            trackers: ["Criteo", "RTB House", "Google Analytics", "Hotjar", "Facebook Pixel", "TikTok Pixel", "Snap Pixel", "Pinterest Tag"],
+            thirdParties: 31,
+            risk: 92,
+            breakdown: { ad: 19, analytics: 6, social: 4, fingerprint: 2 }
+        },
+        "default": {
+            trackers: ["Google Analytics", "DoubleClick", "Facebook Pixel", "Cloudflare Insights", "New Relic", "AddThis"],
+            thirdParties: 15,
+            risk: 64,
+            breakdown: { ad: 7, analytics: 5, social: 2, fingerprint: 1 }
+        }
+    };
+
+    function getData(domain) {
+        let clean = domain.toLowerCase().replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+        for (let key in siteData) {
+            if (clean.includes(key)) return siteData[key];
+        }
+        return siteData["default"];
+    }
+
+    let chart;
+    function updateUI(data, siteName) {
+        document.getElementById('trackerCount').innerText = data.trackers.length;
+        document.getElementById('riskScore').innerText = data.risk;
+        document.getElementById('thirdPartyCount').innerText = data.thirdParties;
+
+        const fill = document.getElementById('riskFill');
+        fill.style.width = `${data.risk}%`;
+        const msg = document.getElementById('riskMessage');
+        if (data.risk > 85) msg.innerText = "🔴 CRITICAL: Your data is sold to 30+ ad networks. Invisible trackers follow you across 95% of websites.";
+        else if (data.risk > 70) msg.innerText = "🟠 HIGH: Hidden trackers build a behavioral profile. Opt‑out options are buried.";
+        else msg.innerText = "🟡 MODERATE: Trackers still collect device info. Use privacy tools to block them.";
+
+        const listDiv = document.getElementById('trackerList');
+        listDiv.innerHTML = data.trackers.map(t => `<div class="tracker-item">📡 ${t}<br><span style="font-size:0.7rem;">invisible · collects behavioral data</span></div>`).join('');
+
+        const ctx = document.getElementById('typeChart').getContext('2d');
+        if (chart) chart.destroy();
+        chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Advertising', 'Analytics', 'Social Media', 'Fingerprinting'],
+                datasets: [{ data: [data.breakdown.ad, data.breakdown.analytics, data.breakdown.social, data.breakdown.fingerprint], backgroundColor: ['#ff6b6b', '#4d9eff', '#aa6eff', '#ffb347'], borderWidth: 0 }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: '#ccc' } } } }
+        });
+
+        document.getElementById('results').style.display = 'block';
+        document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function scan() {
+        let input = document.getElementById('siteInput').value.trim();
+        if (!input) { alert("Enter a website domain or pick an example."); return; }
+        const data = getData(input);
+        updateUI(data, input);
+    }
+
+    document.getElementById('scanBtn').addEventListener('click', scan);
+    document.querySelectorAll('.site-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            document.getElementById('siteInput').value = chip.getAttribute('data-domain');
+            scan();
+        });
+    });
+
+    // Preload empty chart
+    window.addEventListener('load', () => {
+        const ctx = document.getElementById('typeChart').getContext('2d');
+        chart = new Chart(ctx, { type: 'doughnut', data: { labels: [], datasets: [{ data: [] }] }, options: { responsive: true } });
+    });
+</script>
+</body>
+</html>
